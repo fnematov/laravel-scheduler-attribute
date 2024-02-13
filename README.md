@@ -26,7 +26,7 @@ use Fnematov\LaravelSchedulerAttribute\ArtisanScheduler;
 
 class ReportService
 {
-    #[ArtisanScheduler(commandName: 'report:daily', method: 'daily')]
+    #[ArtisanScheduler(name: 'report:daily', schedule: 'daily')]
     public function generateDailyReport()
     {
         // Your task logic here

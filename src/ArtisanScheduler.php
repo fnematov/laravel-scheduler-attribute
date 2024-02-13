@@ -8,9 +8,9 @@ use Attribute;
 class ArtisanScheduler
 {
     public function __construct(
-        public string $commandName,
-        public ?string $repeater = null,
-        public ?string $method = null,
+        public string  $name,
+        public ?string $cron = null,
+        public ?string $schedule = null,
     )
     {
     }

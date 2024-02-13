@@ -8,11 +8,14 @@ use Illuminate\Support\ServiceProvider;
 use ReflectionClass;
 use Symfony\Component\Finder\Finder;
 
-class LaravelSchedulerAttribute extends ServiceProvider
+class LaravelSchedulerAttributeProvider extends ServiceProvider
 {
-    public function boot()
+    public function boot(): void
     {
-
+        $this->app->booted(function () {
+            $schedule = $this->app->make(Schedule::class);
+            $this->registerAttributeCommands($schedule);
+        });
     }
 
     protected function registerAttributeCommands(Schedule $schedule): void
@@ -38,10 +41,10 @@ class LaravelSchedulerAttribute extends ServiceProvider
                         $method->invoke($instance);
                     });
 
-                    if (!is_null($attributeInstance->method) && method_exists($event, $attributeInstance->method)) {
-                        $event->{$attributeInstance->method}()->name($attributeInstance->commandName);
-                    } elseif (!is_null($attributeInstance->repeater)) {
-                        $event->cron($attributeInstance->repeater)->name($attributeInstance->commandName);
+                    if (!is_null($attributeInstance->schedule) && method_exists($event, $attributeInstance->schedule)) {
+                        $event->{$attributeInstance->schedule}()->name($attributeInstance->name);
+                    } elseif (!is_null($attributeInstance->cron)) {
+                        $event->cron($attributeInstance->cron)->name($attributeInstance->name);
                     }
                 }
             }
