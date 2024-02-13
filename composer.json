@@ -3,6 +3,11 @@
     "description": "Laravel schedule registerer by attributes",
     "type": "package",
     "license": "MIT",
+    "keywords": [
+        "laravel",
+        "scheduler",
+        "attribute"
+    ],
     "require": {
         "php": "^8.0",
         "illuminate/console": "^8.0|^9.0|^10.0",
@@ -14,10 +19,21 @@
             "Fnematov\\LaravelSchedulerAttribute\\": "src/"
         }
     },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Fnematov\\LaravelSchedulerAttribute\\LaravelSchedulerAttributeProvider"
+            ]
+        }
+    },
     "authors": [
         {
-            "name": "fnematov",
-            "email": "mr.nematov91@gmail.com"
+            "name": "Farhod Nematov",
+            "email": "mr.nematov91@gmail.com",
+            "role": "Developer"
         }
     ],
     "minimum-stability": "dev"
