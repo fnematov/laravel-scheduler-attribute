@@ -30,19 +30,25 @@ class LaravelSchedulerAttributeProvider extends ServiceProvider
                 continue;
             }
 
-
             $reflectionClass = new ReflectionClass($className);
+
+            if (!$reflectionClass->isInstantiable()) {
+                continue; // Skip if class cannot be instantiated
+            }
+
             foreach ($reflectionClass->getMethods() as $method) {
                 foreach ($method->getAttributes(ArtisanScheduler::class) as $attribute) {
                     $attributeInstance = $attribute->newInstance();
 
-                    $event = $schedule->call(function () use ($method, $reflectionClass) {
-                        $instance = $reflectionClass->newInstance();
+                    $event = $schedule->call(function () use ($method, $className) {
+                        // Use Laravel's container to handle constructor dependencies
+                        $instance = App::make($className);
+                        // For methods, consider requiring no parameters or only using those with default values
                         $method->invoke($instance);
                     });
 
                     if (!is_null($attributeInstance->schedule) && method_exists($event, $attributeInstance->schedule)) {
-                        $event->{$attributeInstance->schedule}()->name($attributeInstance->name);
+                        call_user_func([$event, $attributeInstance->schedule])->name($attributeInstance->name);
                     } elseif (!is_null($attributeInstance->cron)) {
                         $event->cron($attributeInstance->cron)->name($attributeInstance->name);
                     }
